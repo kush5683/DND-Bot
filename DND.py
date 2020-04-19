@@ -2,10 +2,13 @@ import discord
 import random
 from discord.ext import commands
 import os
+import time
+import psutil
 import datetime
 
 TOKEN = open('token.txt').readline()
 def localRoll(numDie, die):
+
     if numDie > 10:
         return "too many dice"
     sum = 0
@@ -40,15 +43,31 @@ def localRoll(numDie, die):
         return 'Nat 20'
     return sum
 
+def checkConditionTrue(cond, comp):
+    if(cond == comp):
+        return True
+    else:
+        return False
+def checkRole(ctx,desiredRole):
+    ans = False
+    for role in ctx.author.roles:
+        if(checkConditionTrue(str(role), desiredRole)):
+            ans = True
+    return ans
+
+
 client = commands.Bot(command_prefix='!')
-client.remove_command('help')
-up = 0;
+#client.remove_command('help')
+processID = psutil.Process(os.getpid())
+
+up = 0
+inProgress = False
 
 @client.event
 async def on_ready():
     global up
-    up = datetime.datetime.now()
-    os.system('clear')
+    up = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(processID.create_time()))
+    os.system('cls')
     print('Bot is ready')
     
 @client.event
@@ -62,7 +81,7 @@ async def on_member_removes(member):
 @client.command()
 async def up(ctx):
     global up
-    await ctx.send(f'Up since {up} UTC')
+    await ctx.send(f'Up since {up}')
 
 
 @client.command()
@@ -73,7 +92,7 @@ async def ping(ctx):
 @client.command()
 async def roll(ctx,die, numDie=1):
     message = localRoll(int(numDie),die)
-    if ctx.channel.name == 'general':
+    if checkConditionTrue(ctx.channel.name, 'general'):
          await ctx.send(f'This action is not allowed in {ctx.channel}')
     elif message == "too many dice" or message =="Something went wrong":
         await ctx.send(message)
@@ -82,15 +101,12 @@ async def roll(ctx,die, numDie=1):
 
 @client.command()
 async def clear(ctx, amount=100):
-    admin = False
-    for role in ctx.author.roles:
-        if str(role) == "Admin":
-            admin = True
+    admin = checkRole(ctx, 'Admin')
     if admin:
         await ctx.channel.purge(limit=amount)
         await ctx.send(f'Cleared by {ctx.author.nick}')
     else:
-        await ctx.send(type(ctx.author.roles[0]))
+        await ctx.send(f'Only Admin can perform this task')
         
     
 @client.command()
@@ -110,15 +126,17 @@ async def poop(ctx):
        
 @client.command()
 async def kill(ctx):
-    manager = False
-    for role in ctx.author.roles:
-        if str(role) == "Bot Manager":
-            manager = True
-    if manager:
-        await ctx.send('Goodbye cruel world')
-        exit()
+    global inProgress
+    if not inProgress:
+        manager = checkRole(ctx,"Bot Manager")
+        if manager:
+            await ctx.send('Goodbye cruel world!')
+            exit()
+        else:
+            await ctx.send('You must be bot manager to perform this task')
     else:
-        await ctx.send('You must be bot manager to perform this task')
+        await ctx.send('There seems to be a session in progress please wait until it is over to kill me')
+
        
 ##@client.command()
 ##async def help(ctx):
@@ -129,7 +147,7 @@ async def kill(ctx):
 ##    await ctx.send('**roles** : your highest role')
 
 @client.command()
-async def help(ctx):
+async def helpme(ctx):
     author = ctx.author
     embed = discord.Embed(
             color = discord.Colour.orange(),
@@ -144,9 +162,33 @@ async def help(ctx):
     
     await ctx.channel.send(embed=embed)
                     
+@client.command()
+async def start(ctx):
+    global inProgress
+    admin = checkRole(ctx, 'Admin')
+    channel = checkConditionTrue(ctx.channel.name, 'wpi-campaign') or checkConditionTrue(ctx.channel.name, 'nmh-campaign')
+    if admin:
+        if channel:
+            await ctx.send('Session Started')
+            inProgress = True
+        else:
+            await ctx.send('Sessions can only be started from within a campaign text channel')
+    else:
+        await ctx.send('Please ask an Admin to start the session')
 
-    
-    
+@client.command()
+async def end(ctx):
+    global inProgress
+    admin = checkRole(ctx, 'Admin')
+    channel = checkConditionTrue(ctx.channel.name, 'wpi-campaign') or checkConditionTrue(ctx.channel.name, 'nmh-campaign')
+    if admin:
+        if channel:
+            await ctx.send('Session Ended')
+            inProgress = False
+        else:
+            await ctx.send('Sessions can only be ended from within a campaign text channel')
+    else:
+        await ctx.send('Please ask an Admin to end the session')
 client.run(TOKEN)
 
 
