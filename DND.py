@@ -62,7 +62,7 @@ async def on_member_removes(member):
 @client.command()
 async def up(ctx):
     global up
-    await ctx.send(f'Up since {up}')
+    await ctx.send(f'Up since {up} UTC')
 
 
 @client.command()
