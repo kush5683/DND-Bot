@@ -115,9 +115,10 @@ async def kill(ctx):
         if str(role) == "Bot Manager":
             manager = True
     if manager:
+        await ctx.send('Goodbye cruel world')
         exit()
     else:
-        ctx.send('You must be bot manager to perform this task')
+        await ctx.send('You must be bot manager to perform this task')
        
 ##@client.command()
 ##async def help(ctx):
