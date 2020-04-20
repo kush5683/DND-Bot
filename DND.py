@@ -63,10 +63,23 @@ processID = psutil.Process(os.getpid())
 up = 0
 inProgress = False
 
+
+def getGen():
+    sendTo = ''
+    text_channel_list = []
+    for guild in client.guilds:
+        for channel in guild.text_channels:
+            text_channel_list.append(channel)
+    for channel in text_channel_list:
+        if(channel.name == 'general'):
+            sendTo = channel
+    return sendTo
+
 @client.event
 async def on_message(message):
     print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
-
+    if 'BOT' in message.content.upper():
+        await message.channel.send('I am the DND Overlord!')
     await client.process_commands(message)
 
 @client.event
@@ -75,6 +88,8 @@ async def on_ready():
     up = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(processID.create_time()))
     os.system('cls')
     print('Bot is ready')
+    await client.change_presence(status=discord.Status.idle, activity=discord.CustomActivity("A game is not in session"))
+    await getGen().send('I have arrived')
     
 @client.event
 async def on_member_join(member):
@@ -168,6 +183,7 @@ async def start(ctx):
     if admin:
         if channel:
             await ctx.send('Session Started')
+            await client.change_presence(status=discord.Status.idle, activity=discord.CustomActivity("A game is in session"))
             inProgress = True
         else:
             await ctx.send('Sessions can only be started from within a campaign text channel')
@@ -182,6 +198,7 @@ async def end(ctx):
     if admin:
         if channel:
             await ctx.send('Session Ended')
+            await client.change_presence(status=discord.Status.idle, activity=discord.CustomActivity("A game is not in session"))
             inProgress = False
         else:
             await ctx.send('Sessions can only be ended from within a campaign text channel')
