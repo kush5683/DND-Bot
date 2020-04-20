@@ -88,7 +88,6 @@ async def on_ready():
     up = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(processID.create_time()))
     os.system('cls')
     print('Bot is ready')
-    await client.change_presence(status=discord.Status.idle, activity=discord.CustomActivity("A game is not in session"))
     await getGen().send('I have arrived')
     
 @client.event
@@ -183,7 +182,7 @@ async def start(ctx):
     if admin:
         if channel:
             await ctx.send('Session Started')
-            await client.change_presence(status=discord.Status.idle, activity=discord.CustomActivity("A game is in session"))
+            await client.change_presence(status=discord.Status.online, activity=discord.Game("In session"))
             inProgress = True
         else:
             await ctx.send('Sessions can only be started from within a campaign text channel')
@@ -198,7 +197,7 @@ async def end(ctx):
     if admin:
         if channel:
             await ctx.send('Session Ended')
-            await client.change_presence(status=discord.Status.idle, activity=discord.CustomActivity("A game is not in session"))
+            await client.change_presence(status=discord.Status.idle)
             inProgress = False
         else:
             await ctx.send('Sessions can only be ended from within a campaign text channel')
