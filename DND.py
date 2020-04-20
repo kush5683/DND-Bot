@@ -57,11 +57,17 @@ def checkRole(ctx,desiredRole):
 
 
 client = commands.Bot(command_prefix='!')
-#client.remove_command('help')
+client.remove_command('help')
 processID = psutil.Process(os.getpid())
 
 up = 0
 inProgress = False
+
+@client.event
+async def on_message(message):
+    print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
+
+    await client.process_commands(message)
 
 @client.event
 async def on_ready():
@@ -138,22 +144,14 @@ async def kill(ctx):
         await ctx.send('There seems to be a session in progress please wait until it is over to kill me')
 
        
-##@client.command()
-##async def help(ctx):
-##    await ctx.send('To call me use \'!\'')
-##    await ctx.send('**help** : to see this message')
-##    await ctx.send('**ping** : A fun little game')
-##    await ctx.send('**roll** `d4, d6, d8, d10, d12, d20, d100` `numer of die to roll` ***1 if not specified*** : rolls the specified die the specified amount of times')
-##    await ctx.send('**roles** : your highest role')
 
 @client.command()
-async def helpme(ctx):
+async def help(ctx):
     author = ctx.author
     embed = discord.Embed(
             color = discord.Colour.orange(),
             title='Help'
     )
-    #embed.set_author(name='help')
     embed.add_field(name='!help', value='This message',inline=False)
     embed.add_field(name='!ping', value='Returns Pong!',inline=False)
     embed.add_field(name='!roll', value='Takes in [d4, d6, d8, d10, d12, d20, d100] followed by a number <10 [1 if not specified] and returns the value rolled',inline=False)
