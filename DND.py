@@ -197,7 +197,7 @@ async def end(ctx):
     if admin:
         if channel:
             await ctx.send('Session Ended')
-            await client.change_presence(status=discord.Status.idle)
+            await client.change_presence(status=discord.Status.online)
             inProgress = False
         else:
             await ctx.send('Sessions can only be ended from within a campaign text channel')
