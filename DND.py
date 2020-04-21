@@ -61,7 +61,7 @@ def getBotStat():
 @client.event
 async def on_message(message):
     print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
-    if 'BOT' in message.content.upper() and message.author.name is not 'DND OVERLORD':
+    if ('BOT' in message.content.upper()) and (message.author.name != 'DND OVERLORD'):
         await message.channel.send('I am the DND Overlord!')
     await client.process_commands(message)
 
@@ -69,8 +69,9 @@ async def on_message(message):
 async def on_ready():
     global up
     up = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(processID.create_time()))
-    os.system('cls')
+    os.system('clear')
     print('Bot is ready')
+    await getBotStat().purge(limit=1000)
     await getBotStat().send('I have arrived')
     
 @client.event
@@ -144,7 +145,7 @@ async def kill(ctx):
     if not inProgress:
         manager = checkRole(ctx,"Bot Manager")
         if manager:
-            await getBotStat.send('Goodbye cruel world!')
+            await getBotStat().send('Goodbye cruel world!')
             exit()
         else:
             await ctx.send('You must be bot manager to perform this task')
