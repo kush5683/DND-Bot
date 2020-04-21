@@ -86,6 +86,14 @@ async def up(ctx):
     global up
     await ctx.send(f'Up since {up}')
 
+@client.command()
+async def repeat(ctx, message, amount=1):
+    count = 0
+    send = ''
+    while count < amount:
+        send += (message + ' ')
+        count+=1
+    await ctx.send(send)
 
 @client.command()
 async def ping(ctx):
