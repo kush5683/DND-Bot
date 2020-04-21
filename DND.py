@@ -7,39 +7,22 @@ import psutil
 import datetime
 
 TOKEN = open('token.txt').readline()
-def localRoll(numDie, die):
 
+def localRoll(numDie, die):
+    dice = [4,6,8,10,12,20,100]
     if numDie > 10:
         return "too many dice"
     sum = 0
     rolls = 0
+    theDie = int(die[1:])
     #d4 d6 d8 d10 d12 d20 d100
-    while rolls < numDie:
-        theDie = die.upper()
-        if(theDie=='D4' or die=='d4'):
-            sum+= random.randint(1,4)
+    if theDie in dice:
+        while rolls < numDie:
+            sum+=random.randint(1,theDie)
             rolls+=1
-        elif(theDie=='D6' or die=='d6'):
-            sum+= random.randint(1,6)
-            rolls+=1
-        elif(theDie=='D8' or die=='d8'):
-            sum+= random.randint(1,8)
-            rolls+=1
-        elif(theDie=='D10' or die=='d10'):
-            sum+= random.randint(1,10)
-            rolls+=1
-        elif(theDie=='D12' or die=='d12'):
-            sum+= random.randint(1,12)
-            rolls+=1
-        elif(theDie=='D20' or die=='d20'):
-            sum+= random.randint(1,20)
-            rolls+=1
-        elif(theDie=='D100' or die=='d100'):
-            sum+= random.randint(1,100)
-            rolls+=1
-        else:
-            return "Something went wrong"
-    if(sum==20 and theDie=='D20'):
+    else:
+        return "Something went wrong"
+    if(sum==20 and theDie == 20):
         return 'Nat 20'
     return sum
 
@@ -103,6 +86,17 @@ async def up(ctx):
     global up
     await ctx.send(f'Up since {up}')
 
+@client.command()
+async def repeat(ctx, message, amount=1):
+    if(checkRole(ctx, 'Admin')):
+        count = 0
+        send = ''
+        while count < amount:
+            send += (message + ' ')
+            count+=1
+        await ctx.send(send)
+    else:
+        await ctx.send('This fun command is only for Admins sorry :(')
 
 @client.command()
 async def ping(ctx):
