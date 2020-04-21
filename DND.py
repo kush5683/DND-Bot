@@ -88,12 +88,15 @@ async def up(ctx):
 
 @client.command()
 async def repeat(ctx, message, amount=1):
-    count = 0
-    send = ''
-    while count < amount:
-        send += (message + ' ')
-        count+=1
-    await ctx.send(send)
+    if(checkRole(ctx, 'Admin')):
+        count = 0
+        send = ''
+        while count < amount:
+            send += (message + ' ')
+            count+=1
+        await ctx.send(send)
+    else:
+        await ctx.send('This fun command is only for Admins sorry :(')
 
 @client.command()
 async def ping(ctx):
