@@ -7,18 +7,21 @@ import psutil
 import datetime
 
 TOKEN = open('token.txt').readline()
+
 def localRoll(numDie, die):
-
-
+    dice = [4,6,8,10,12,20,100]
     if numDie > 10:
         return "too many dice"
     sum = 0
     rolls = 0
-    theDie = die[1:]
+    theDie = int(die[1:])
     #d4 d6 d8 d10 d12 d20 d100
-    while rolls < numDie:
-        sum+=random.randint(1,theDie)
-        rolls+1
+    if theDie in dice:
+        while rolls < numDie:
+            sum+=random.randint(1,theDie)
+            rolls+=1
+    else:
+        return "Something went wrong"
     if(sum==20 and theDie == 20):
         return 'Nat 20'
     return sum
