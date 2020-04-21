@@ -47,21 +47,21 @@ up = 0
 inProgress = False
 
 
-def getGen():
+def getBotStat():
     sendTo = ''
     text_channel_list = []
     for guild in client.guilds:
         for channel in guild.text_channels:
             text_channel_list.append(channel)
     for channel in text_channel_list:
-        if(channel.name == 'general'):
+        if(channel.name == 'bot-status'):
             sendTo = channel
     return sendTo
 
 @client.event
 async def on_message(message):
     print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
-    if 'BOT' in message.content.upper():
+    if ('BOT' in message.content.upper()) and (message.author.name != 'DND OVERLORD'):
         await message.channel.send('I am the DND Overlord!')
     await client.process_commands(message)
 
@@ -69,9 +69,10 @@ async def on_message(message):
 async def on_ready():
     global up
     up = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(processID.create_time()))
-    os.system('cls')
+    os.system('clear')
     print('Bot is ready')
-    await getGen().send('I have arrived')
+    await getBotStat().purge(limit=1000)
+    await getBotStat().send('I have arrived')
     
 @client.event
 async def on_member_join(member):
@@ -144,7 +145,7 @@ async def kill(ctx):
     if not inProgress:
         manager = checkRole(ctx,"Bot Manager")
         if manager:
-            await ctx.send('Goodbye cruel world!')
+            await getBotStat().send('Goodbye cruel world!')
             exit()
         else:
             await ctx.send('You must be bot manager to perform this task')
