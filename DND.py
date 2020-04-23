@@ -31,6 +31,18 @@ def checkRole(ctx,desiredRole):
             ans = True
     return ans
 
+def checkConditionTrue(cond, comp):
+    if(cond == comp):
+        return True
+    else:
+        return False
+def checkRole(ctx,desiredRole):
+    ans = False
+    for role in ctx.author.roles:
+        if(checkConditionTrue(str(role), desiredRole)):
+            ans = True
+    return ans
+
 def localRoll(ctx, numDie, die):
     dice = [4,6,8,10,12,20,100]
     checkAdmin = checkRole(ctx, "Admin")
@@ -50,8 +62,10 @@ def localRoll(ctx, numDie, die):
         return 'Nat 20'
     return sum
 
+
 client = commands.Bot(command_prefix='!',self_bot=True)
 client.remove_command('help')
+
 processID = psutil.Process(os.getpid())
 
 up = 0
