@@ -8,9 +8,23 @@ import datetime
 
 TOKEN = open('token.txt').readline()
 
-def localRoll(numDie, die):
+
+def checkConditionTrue(cond, comp):
+    if(cond == comp):
+        return True
+    else:
+        return False
+def checkRole(ctx,desiredRole):
+    ans = False
+    for role in ctx.author.roles:
+        if(checkConditionTrue(str(role), desiredRole)):
+            ans = True
+    return ans
+
+def localRoll(ctx, numDie, die):
     dice = [4,6,8,10,12,20,100]
-    if numDie > 10:
+    checkAdmin = checkRole(ctx, "Admin")
+    if numDie > 10 and checkAdmin == False:
         return "too many dice"
     sum = 0
     rolls = 0
@@ -26,20 +40,7 @@ def localRoll(numDie, die):
         return 'Nat 20'
     return sum
 
-def checkConditionTrue(cond, comp):
-    if(cond == comp):
-        return True
-    else:
-        return False
-def checkRole(ctx,desiredRole):
-    ans = False
-    for role in ctx.author.roles:
-        if(checkConditionTrue(str(role), desiredRole)):
-            ans = True
-    return ans
-
-
-client = commands.Bot(command_prefix='!')
+client = commands.Bot(command_prefix='!',self_bot=True)
 client.remove_command('help')
 processID = psutil.Process(os.getpid())
 
@@ -106,13 +107,13 @@ async def ping(ctx):
     
 @client.command()
 async def roll(ctx,die, numDie=1):
-    message = localRoll(int(numDie),die)
+    message = localRoll(ctx, int(numDie),die)
     if checkConditionTrue(ctx.channel.name, 'general'):
          await ctx.send(f'This action is not allowed in {ctx.channel}')
     elif message == "too many dice" or message =="Something went wrong":
         await ctx.send(message)
     else:
-        await ctx.send(f' {ctx.author.nick} rolled {localRoll(int(numDie), die)} from {numDie} {die}')
+        await ctx.send(f' {ctx.author.nick} rolled {localRoll(ctx, int(numDie), die)} from {numDie} {die}')
 
 @client.command()
 async def clear(ctx, amount=100):
