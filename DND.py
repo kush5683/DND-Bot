@@ -7,7 +7,17 @@ import psutil
 import datetime
 
 TOKEN = open('token.txt').readline()
-
+def buildEmbed():
+    embed = discord.Embed(
+            color = discord.Colour.orange(),
+            title='Help'
+    )
+    embed.add_field(name='!help', value='This message',inline=False)
+    embed.add_field(name='!ping', value='Returns Pong!',inline=False)
+    embed.add_field(name='!roll', value='Takes in [d4, d6, d8, d10, d12, d20, d100] followed by a number <10 [1 if not specified] and returns the value rolled',inline=False)
+    embed.add_field(name='!roles', value='Returns Your roles',inline=False)
+    embed.add_field(name='!poop', value='Returns poopy',inline=False)
+    return embed
 
 def checkConditionTrue(cond, comp):
     if(cond == comp):
@@ -74,6 +84,7 @@ async def on_ready():
     print('Bot is ready')
     await getBotStat().purge(limit=1000)
     await getBotStat().send('I have arrived')
+    await getBotStat().send(embed=buildEmbed())
     
 @client.event
 async def on_member_join(member):
@@ -157,18 +168,7 @@ async def kill(ctx):
 
 @client.command()
 async def help(ctx):
-    author = ctx.author
-    embed = discord.Embed(
-            color = discord.Colour.orange(),
-            title='Help'
-    )
-    embed.add_field(name='!help', value='This message',inline=False)
-    embed.add_field(name='!ping', value='Returns Pong!',inline=False)
-    embed.add_field(name='!roll', value='Takes in [d4, d6, d8, d10, d12, d20, d100] followed by a number <10 [1 if not specified] and returns the value rolled',inline=False)
-    embed.add_field(name='!roles', value='Returns Your roles',inline=False)
-    embed.add_field(name='!poop', value='Returns poopy',inline=False)
-    
-    await ctx.channel.send(embed=embed)
+        await ctx.channel.send(embed=buildEmbed())
                     
 @client.command()
 async def start(ctx):
