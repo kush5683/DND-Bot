@@ -31,18 +31,6 @@ def checkRole(ctx,desiredRole):
             ans = True
     return ans
 
-def checkConditionTrue(cond, comp):
-    if(cond == comp):
-        return True
-    else:
-        return False
-def checkRole(ctx,desiredRole):
-    ans = False
-    for role in ctx.author.roles:
-        if(checkConditionTrue(str(role), desiredRole)):
-            ans = True
-    return ans
-
 def localRoll(ctx, numDie, die):
     dice = [4,6,8,10,12,20,100]
     checkAdmin = checkRole(ctx, "Admin")
@@ -62,10 +50,8 @@ def localRoll(ctx, numDie, die):
         return 'Nat 20'
     return sum
 
-
-client = commands.Bot(command_prefix='!',self_bot=True)
+client = commands.Bot(command_prefix='!')
 client.remove_command('help')
-
 processID = psutil.Process(os.getpid())
 
 up = 0
@@ -173,6 +159,7 @@ async def kill(ctx):
         manager = checkRole(ctx,"Bot Manager")
         if manager:
             await getBotStat().send('Goodbye cruel world!')
+            await client.change_presence(status=discord.Status.idle)
             exit()
         else:
             await ctx.send('You must be bot manager to perform this task')
@@ -208,7 +195,7 @@ async def end(ctx):
     if admin:
         if channel:
             await ctx.send('Session Ended')
-            await client.change_presence(status=discord.Status.online)
+            await client.change_presence(status=discord.Status.idle)
             inProgress = False
         else:
             await ctx.send('Sessions can only be ended from within a campaign text channel')
