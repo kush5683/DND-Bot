@@ -85,7 +85,7 @@ async def on_ready():
     await getBotStat().purge(limit=1000)
     await getBotStat().send('I have arrived')
     await getBotStat().send(embed=buildEmbed())
-    await getBotStat().send(f'Boot time:{up}')
+    await getBotStat().send(f'Boot time: {up}')
     
 @client.event
 async def on_member_join(member):
