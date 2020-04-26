@@ -6,6 +6,8 @@ import time
 import psutil
 import datetime
 
+version = "Build 2.0"
+
 TOKEN = open('token.txt').readline()
 def buildEmbed():
     embed = discord.Embed(
@@ -81,11 +83,12 @@ async def on_ready():
     global up
     up = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(processID.create_time()))
     os.system('clear')
+    print(version)
     print('Bot is ready')
     await getBotStat().purge(limit=1000)
-    await getBotStat().send('I have arrived')
+    await getBotStat().send(f'I have arrived with {version} loaded')
     await getBotStat().send(embed=buildEmbed())
-    await getBotStat().send(f'Boot time: {up}')
+    await getBotStat().send(f'Boot time:{up}')
     
 @client.event
 async def on_member_join(member):
