@@ -6,7 +6,7 @@ import time
 import psutil
 import datetime
 
-version = "Build 2.0"
+version = "Build 3.0"
 
 TOKEN = open('token.txt').readline()
 def buildEmbed():
@@ -74,7 +74,7 @@ def getBotStat():
 @client.event
 async def on_message(message):
     print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
-    if ('BOT' in message.content.upper()) and (message.author.name != 'DND OVERLORD'):
+    if ('BOT ' in message.content.upper()) and (message.author.name != 'DND OVERLORD'):
         await message.channel.send('I am the DND Overlord!')
     await client.process_commands(message)
 
@@ -89,6 +89,11 @@ async def on_ready():
     await getBotStat().send(f'I have arrived with {version} loaded')
     await getBotStat().send(embed=buildEmbed())
     await getBotStat().send(f'Boot time:{up}')
+
+@client.event 
+async def on_command_error(ctx, error):
+    await ctx.send("Sorry that is an unknown command")
+    await ctx.send(embed=buildEmbed())
     
 @client.event
 async def on_member_join(member):
