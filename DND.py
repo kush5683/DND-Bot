@@ -6,6 +6,8 @@ import time
 import psutil
 import datetime
 
+version = "Build 2.0"
+
 TOKEN = open('token.txt').readline()
 def buildEmbed():
     embed = discord.Embed(
@@ -18,18 +20,6 @@ def buildEmbed():
     embed.add_field(name='!roles', value='Returns Your roles',inline=False)
     embed.add_field(name='!poop', value='Returns poopy',inline=False)
     return embed
-
-def checkConditionTrue(cond, comp):
-    if(cond == comp):
-        return True
-    else:
-        return False
-def checkRole(ctx,desiredRole):
-    ans = False
-    for role in ctx.author.roles:
-        if(checkConditionTrue(str(role), desiredRole)):
-            ans = True
-    return ans
 
 def checkConditionTrue(cond, comp):
     if(cond == comp):
@@ -62,10 +52,8 @@ def localRoll(ctx, numDie, die):
         return 'Nat 20'
     return sum
 
-
-client = commands.Bot(command_prefix='!',self_bot=True)
+client = commands.Bot(command_prefix='!')
 client.remove_command('help')
-
 processID = psutil.Process(os.getpid())
 
 up = 0
@@ -86,7 +74,7 @@ def getBotStat():
 @client.event
 async def on_message(message):
     print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
-    if ('BOT' in message.content.upper()) and (message.author.name != 'DND OVERLORD'):
+    if (' BOT ' in message.content.upper()) and (message.author.name != 'DND OVERLORD'):
         await message.channel.send('I am the DND Overlord!')
     await client.process_commands(message)
 
@@ -95,11 +83,17 @@ async def on_ready():
     global up
     up = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(processID.create_time()))
     os.system('clear')
+    print(version)
     print('Bot is ready')
     await getBotStat().purge(limit=1000)
-    await getBotStat().send('I have arrived')
+    await getBotStat().send(f'I have arrived with {version} loaded')
     await getBotStat().send(embed=buildEmbed())
     await getBotStat().send(f'Boot time:{up}')
+
+@client.event 
+async def on_command_error(ctx, error):
+    await ctx.send("Sorry that is an unknown command")
+    await ctx.send(embed=buildEmbed())
     
 @client.event
 async def on_member_join(member):
@@ -173,6 +167,7 @@ async def kill(ctx):
         manager = checkRole(ctx,"Bot Manager")
         if manager:
             await getBotStat().send('Goodbye cruel world!')
+            await client.change_presence(status=discord.Status.idle)
             exit()
         else:
             await ctx.send('You must be bot manager to perform this task')
@@ -208,7 +203,7 @@ async def end(ctx):
     if admin:
         if channel:
             await ctx.send('Session Ended')
-            await client.change_presence(status=discord.Status.online)
+            await client.change_presence(status=discord.Status.idle)
             inProgress = False
         else:
             await ctx.send('Sessions can only be ended from within a campaign text channel')
