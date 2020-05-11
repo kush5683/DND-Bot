@@ -6,7 +6,9 @@ import time
 import psutil
 import datetime
 
-version = "Build 3.0"
+
+version = "Build 3.1"
+
 
 TOKEN = open('token.txt').readline()
 def buildEmbed():
@@ -74,8 +76,11 @@ def getBotStat():
 @client.event
 async def on_message(message):
     print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
-    if ('BOT ' in message.content.upper()) and (message.author.name != 'DND OVERLORD'):
-        await message.channel.send('I am the DND Overlord!')
+
+    text = message.content.upper().split()
+    for x in text:
+        if x == 'BOT' and (message.author.name != 'DND OVERLORD'):
+            await message.channel.send('I am the DND Overlord!')
     await client.process_commands(message)
 
 @client.event
