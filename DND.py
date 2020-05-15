@@ -5,10 +5,9 @@ import os
 import time
 import psutil
 import datetime
+import string
 
-
-version = "Build 3.1"
-
+version = "Build 3.2"
 
 TOKEN = open('token.txt').readline()
 def buildEmbed():
@@ -76,8 +75,9 @@ def getBotStat():
 @client.event
 async def on_message(message):
     print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
-
-    text = message.content.upper().split()
+    text = []
+    for str in message.content.upper().split():
+        text.append(str.translate(str.maketrans('', '', string.punctuation)))
     for x in text:
         if x == 'BOT' and (message.author.name != 'DND OVERLORD'):
             await message.channel.send('I am the DND Overlord!')
@@ -164,6 +164,10 @@ async def poop(ctx):
        await ctx.send(f'{ctx.author.nick} is poopy')
     else:
        await ctx.send('Keith is a poopy head')
+
+@client.command()
+async def unshitmypants(ctx):
+    await ctx.send(file=discord.File('poopPants.jpg'))
        
 @client.command()
 async def kill(ctx):
