@@ -7,7 +7,9 @@ import psutil
 import datetime
 import string
 
+
 version = "Build 3.3"
+
 
 TOKEN = open('token.txt').readline()
 def buildEmbed():
