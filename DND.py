@@ -7,7 +7,9 @@ import psutil
 import datetime
 import string
 
+
 version = "Build 3.4"
+
 
 TOKEN = open('token.txt').readline()
 def buildEmbed():
@@ -182,7 +184,7 @@ async def poop(ctx):
 
 @client.command()
 async def unshitmypants(ctx):
-    await ctx.send(file=discord.File('assets\poopPants.jpg'))
+    await ctx.send(file=discord.File('assets/poopPants.jpg'))
        
 @client.command()
 async def kill(ctx):
