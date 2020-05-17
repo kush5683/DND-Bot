@@ -46,7 +46,7 @@ def localRoll(ctx, numDie, die):
     theDie = int(die[1:])
     #d4 d6 d8 d10 d12 d20 d100
     if theDie in dice:
-        while rolls <= numDie:
+        while rolls < numDie:
             sum+=random.randint(1,theDie)
             rolls+=1
     else:
