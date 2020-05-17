@@ -7,7 +7,9 @@ import psutil
 import datetime
 import string
 
-version = "Build 3.3"
+
+version = "Build 3.4"
+
 
 TOKEN = open('token.txt').readline()
 def buildEmbed():
@@ -21,6 +23,7 @@ def buildEmbed():
     embed.add_field(name='!roles', value='Returns Your roles',inline=False)
     embed.add_field(name='!poop', value='Returns poopy',inline=False)
     embed.add_field(name='!unshitmypants', value='Does the thing', inline=False)
+    embed.add_field(name='!flip', value='Flips a coin (Heads or Tails)', inline=False)
     return embed
 
 def checkConditionTrue(cond, comp):
@@ -52,6 +55,8 @@ def localRoll(ctx, numDie, die):
         return "Something went wrong"
     if(sum==20 and theDie == 20):
         return 'Nat 20'
+    if(sum==1):
+        return 'Crit Fail'
     return sum
 
 client = commands.Bot(command_prefix='!')
@@ -140,6 +145,17 @@ async def roll(ctx,die, numDie=1):
         await ctx.send(message)
     else:
         await ctx.send(f' {ctx.author.nick} rolled {localRoll(ctx, int(numDie), die)} from {numDie} {die}')
+
+@client.command()
+async def flip(ctx):
+    coin = ['Heads','Tails']
+    result = random.choice(coin)
+    if checkConditionTrue(ctx.channel.name, 'general'):
+         await ctx.send(f'This action is not allowed in {ctx.channel}')
+    else:
+        await ctx.send(result)
+    
+    
 
 @client.command()
 async def clear(ctx, amount=100):
