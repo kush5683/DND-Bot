@@ -7,9 +7,7 @@ import psutil
 import datetime
 import string
 
-
-version = "Build 3.4"
-
+version = "Build 3.5"
 
 TOKEN = open('token.txt').readline()
 def buildEmbed():
@@ -80,7 +78,7 @@ def getBotStat():
 
 @client.event
 async def on_message(message):
-    #print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
+    print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
     text = []
     for str in message.content.upper().split():
         text.append(str.translate(str.maketrans('', '', string.punctuation)))
@@ -172,6 +170,11 @@ async def roles(ctx):
     for role in ctx.author.roles:
         if str(role) != '@everyone':
             await ctx.send(f'{ctx.author.nick} has role {role}')
+
+@client.command()
+async def zoom(ctx):
+    link = 'https://wpi.zoom.us/j/2284559997'
+    await ctx.send(link)
     
         
 @client.command()
@@ -184,7 +187,7 @@ async def poop(ctx):
 
 @client.command()
 async def unshitmypants(ctx):
-    await ctx.send(file=discord.File('assets/poopPants.jpg'))
+    await ctx.send(file=discord.File('assets\poopPants.jpg'))
        
 @client.command()
 async def kill(ctx):
