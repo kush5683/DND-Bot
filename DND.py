@@ -41,21 +41,24 @@ def localRoll(ctx, numDie, die):
     checkAdmin = checkRole(ctx, "Admin")
     if numDie > 10 and checkAdmin == False:
         return "too many dice"
+    values = []
     sum = 0
     rolls = 0
     theDie = int(die[1:])
     #d4 d6 d8 d10 d12 d20 d100
     if theDie in dice:
         while rolls < numDie:
-            sum+=random.randint(1,theDie)
+            roll = random.randint(1,theDie)
+            sum+= roll
+            values.append(roll)
             rolls+=1
     else:
         return "Something went wrong"
-    if(sum==20 and theDie == 20):
+    if(sum==20 and theDie == 20 and numDie==1):
         return 'Nat 20'
     if(sum==1):
         return 'Crit Fail'
-    return sum
+    return (sum,values)
 
 client = commands.Bot(command_prefix='!')
 client.remove_command('help')
@@ -136,13 +139,14 @@ async def ping(ctx):
     
 @client.command()
 async def roll(ctx,die, numDie=1):
-    message = localRoll(ctx, int(numDie),die)
+    message = localRoll(int(numDie),die)
     if checkConditionTrue(ctx.channel.name, 'general'):
          await ctx.send(f'This action is not allowed in {ctx.channel}')
     elif message == "too many dice" or message =="Something went wrong":
         await ctx.send(message)
     else:
-        await ctx.send(f' {ctx.author.nick} rolled {localRoll(ctx, int(numDie), die)} from {numDie} {die}')
+        tup = localRoll(int(numDie), die)
+        await ctx.send(f' {ctx.author.nick} rolled {tup[0]} from {numDie} {die} \n{tup[1]}')
 
 @client.command()
 async def flip(ctx):
