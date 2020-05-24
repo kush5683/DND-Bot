@@ -139,13 +139,12 @@ async def ping(ctx):
     
 @client.command()
 async def roll(ctx,die, numDie=1):
-    message = localRoll(int(numDie),die)
+    tup = localRoll(ctx, int(numDie),die)
     if checkConditionTrue(ctx.channel.name, 'general'):
          await ctx.send(f'This action is not allowed in {ctx.channel}')
-    elif message == "too many dice" or message =="Something went wrong":
-        await ctx.send(message)
+    elif tup == "too many dice" or tup =="Something went wrong":
+        await ctx.send(tup)
     else:
-        tup = localRoll(int(numDie), die)
         await ctx.send(f' {ctx.author.nick} rolled {tup[0]} from {numDie} {die} \n{tup[1]}')
 
 @client.command()
