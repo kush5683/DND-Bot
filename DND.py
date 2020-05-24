@@ -55,9 +55,9 @@ def localRoll(ctx, numDie, die):
     else:
         return "Something went wrong"
     if(sum==20 and theDie == 20 and numDie==1):
-        return 'Nat 20'
+        return ('Nat 20',values)
     if(sum==1):
-        return 'Crit Fail'
+        return ('Crit Fail', values)
     return (sum,values)
 
 client = commands.Bot(command_prefix='!')
