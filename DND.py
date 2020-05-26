@@ -180,7 +180,9 @@ async def roles(ctx):
         if str(role) != '@everyone':
             await ctx.send(f'{ctx.author.nick} has role {role}')
 
+
 #returns the zoom link for the sessions
+
 @client.command()
 async def zoom(ctx):
     link = 'https://wpi.zoom.us/j/2284559997'
