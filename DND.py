@@ -7,12 +7,12 @@ import psutil
 import datetime
 import string
 
-
-version = "Build 3.4"
-
+version = "Build 3.6"
 
 TOKEN = open('token.txt').readline()
-def buildEmbed():
+
+#builds the embed to be sent for the !help command
+def helpEmbed():
     embed = discord.Embed(
             color = discord.Colour.orange(),
             title='Help'
@@ -26,38 +26,37 @@ def buildEmbed():
     embed.add_field(name='!flip', value='Flips a coin (Heads or Tails)', inline=False)
     return embed
 
-def checkConditionTrue(cond, comp):
-    if(cond == comp):
-        return True
-    else:
-        return False
 def checkRole(ctx,desiredRole):
     ans = False
     for role in ctx.author.roles:
-        if(checkConditionTrue(str(role), desiredRole)):
+        if str(role) == desiredRole:
             ans = True
     return ans
 
+#Rolls the desiered amount of die and returns the list of rolls and their sum
 def localRoll(ctx, numDie, die):
     dice = [4,6,8,10,12,20,100]
     checkAdmin = checkRole(ctx, "Admin")
     if numDie > 10 and checkAdmin == False:
         return "too many dice"
+    values = []
     sum = 0
     rolls = 0
     theDie = int(die[1:])
     #d4 d6 d8 d10 d12 d20 d100
     if theDie in dice:
         while rolls < numDie:
-            sum+=random.randint(1,theDie)
+            roll = random.randint(1,theDie)
+            sum+= roll
+            values.append(roll)
             rolls+=1
     else:
         return "Something went wrong"
-    if(sum==20 and theDie == 20):
-        return 'Nat 20'
+    if(sum==20 and theDie == 20 and numDie==1):
+        return ('Nat 20',values)
     if(sum==1):
-        return 'Crit Fail'
-    return sum
+        return ('Crit Fail', values)
+    return (sum,values)
 
 client = commands.Bot(command_prefix='!')
 client.remove_command('help')
@@ -66,7 +65,7 @@ processID = psutil.Process(os.getpid())
 up = 0
 inProgress = False
 
-
+#gets the BotStat channel
 def getBotStat():
     sendTo = ''
     text_channel_list = []
@@ -78,6 +77,7 @@ def getBotStat():
             sendTo = channel
     return sendTo
 
+#logs all messages on server 
 @client.event
 async def on_message(message):
     print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
@@ -89,6 +89,7 @@ async def on_message(message):
             await message.channel.send('I am the DND Overlord!')
     await client.process_commands(message)
 
+#sets up bot and notifies server
 @client.event
 async def on_ready():
     global up
@@ -98,13 +99,14 @@ async def on_ready():
     print('Bot is ready')
     await getBotStat().purge(limit=1000)
     await getBotStat().send(f'I have arrived with {version} loaded')
-    await getBotStat().send(embed=buildEmbed())
+    await getBotStat().send(embed=helpEmbed())
     await getBotStat().send(f'Boot time:{up}')
 
+#sends help on incorrect command/syntax
 @client.event 
 async def on_command_error(ctx, error):
     await ctx.send("Sorry that is an unknown command")
-    await ctx.send(embed=buildEmbed())
+    await ctx.send(embed=helpEmbed())
     
 @client.event
 async def on_member_join(member):
@@ -114,11 +116,13 @@ async def on_member_join(member):
 async def on_member_removes(member):
     print(f'{member} is no longer here')
 
+#returns uptime to server
 @client.command()
 async def up(ctx):
     global up
     await ctx.send(f'Up since {up}')
 
+#repeats the given message {amount} times
 @client.command()
 async def repeat(ctx, message, amount=1):
     if(checkRole(ctx, 'Admin')):
@@ -131,32 +135,35 @@ async def repeat(ctx, message, amount=1):
     else:
         await ctx.send('This fun command is only for Admins sorry :(')
 
+
 @client.command()
 async def ping(ctx):
     print(f'{ctx.channel.id}')
     await ctx.send(f'Pong!')
     
+#rolls the {die} {numDie} times
 @client.command()
 async def roll(ctx,die, numDie=1):
-    message = localRoll(ctx, int(numDie),die)
-    if checkConditionTrue(ctx.channel.name, 'general'):
+    tup = localRoll(ctx, int(numDie),die)
+    if ctx.channel.name == 'general':
          await ctx.send(f'This action is not allowed in {ctx.channel}')
-    elif message == "too many dice" or message =="Something went wrong":
-        await ctx.send(message)
+    elif tup == "too many dice" or tup =="Something went wrong":
+        await ctx.send(tup)
     else:
-        await ctx.send(f' {ctx.author.nick} rolled {localRoll(ctx, int(numDie), die)} from {numDie} {die}')
+        await ctx.send(f' {ctx.author.nick} rolled {tup[0]} from {numDie} {die} \n{tup[1]}')
 
+#flips a coin
 @client.command()
 async def flip(ctx):
     coin = ['Heads','Tails']
     result = random.choice(coin)
-    if checkConditionTrue(ctx.channel.name, 'general'):
+    if ctx.channel.name == 'general':
          await ctx.send(f'This action is not allowed in {ctx.channel}')
     else:
         await ctx.send(result)
     
     
-
+#clears message history from channel
 @client.command()
 async def clear(ctx, amount=100):
     admin = checkRole(ctx, 'Admin')
@@ -166,14 +173,20 @@ async def clear(ctx, amount=100):
     else:
         await ctx.send(f'Only Admin can perform this task')
         
-    
+#returns authors roles on the server
 @client.command()
 async def roles(ctx):
     for role in ctx.author.roles:
         if str(role) != '@everyone':
             await ctx.send(f'{ctx.author.nick} has role {role}')
+
+#returns the zoom link for the sessions
+@client.command()
+async def zoom(ctx):
+    link = 'https://wpi.zoom.us/j/2284559997'
+    await ctx.send(link)
     
-        
+#calls the author a poopy head 
 @client.command()
 async def poop(ctx):
    # print(f'{ctx.author.name.upper()}')
@@ -182,10 +195,12 @@ async def poop(ctx):
     else:
        await ctx.send('Keith is a poopy head')
 
+#returns image
 @client.command()
 async def unshitmypants(ctx):
-    await ctx.send(file=discord.File('assets/poopPants.jpg'))
+    await ctx.send(file=discord.File('assets\poopPants.jpg'))
        
+#kills the bot
 @client.command()
 async def kill(ctx):
     global inProgress
@@ -201,16 +216,18 @@ async def kill(ctx):
         await ctx.send('There seems to be a session in progress please wait until it is over to kill me')
 
        
-
+#sends the help EMbed
 @client.command()
 async def help(ctx):
-        await ctx.channel.send(embed=buildEmbed())
-                    
+        await ctx.channel.send(embed=helpEmbed())
+
+
+#starts the server so that the bot can't be killed when in session and sets bot status            
 @client.command()
 async def start(ctx):
     global inProgress
     admin = checkRole(ctx, 'Admin')
-    channel = checkConditionTrue(ctx.channel.name, 'wpi-campaign') or checkConditionTrue(ctx.channel.name, 'nmh-campaign')
+    channel = ctx.channel.name == 'wpi-campaign'or ctx.channel.name == 'nmh-campaign'
     if admin:
         if channel:
             await ctx.send('Session Started')
@@ -221,11 +238,12 @@ async def start(ctx):
     else:
         await ctx.send('Please ask an Admin to start the session')
 
+#end sthe session so that the bot can be killed and resets the bot status
 @client.command()
 async def end(ctx):
     global inProgress
     admin = checkRole(ctx, 'Admin')
-    channel = checkConditionTrue(ctx.channel.name, 'wpi-campaign') or checkConditionTrue(ctx.channel.name, 'nmh-campaign')
+    channel = ctx.channel.name == 'wpi-campaign'or ctx.channel.name == 'nmh-campaign'
     if admin:
         if channel:
             await ctx.send('Session Ended')
@@ -235,6 +253,11 @@ async def end(ctx):
             await ctx.send('Sessions can only be ended from within a campaign text channel')
     else:
         await ctx.send('Please ask an Admin to end the session')
+
+
+
+
+
 client.run(TOKEN)
 
 
