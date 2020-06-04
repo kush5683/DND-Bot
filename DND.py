@@ -37,7 +37,7 @@ def checkRole(ctx,desiredRole):
 def localRoll(ctx, numDie, die):
     dice = [4,6,8,10,12,20,100]
     checkAdmin = checkRole(ctx, "Admin")
-    if numDie > 10 and checkAdmin == False:
+    if numDie > 40 and checkAdmin == False:
         return "too many dice"
     values = []
     sum = 0
