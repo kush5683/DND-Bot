@@ -216,6 +216,14 @@ async def kill(ctx):
             await ctx.send('You must be bot manager to perform this task')
     else:
         await ctx.send('There seems to be a session in progress please wait until it is over to kill me')
+        
+@client.command()
+async def statusreport(ctx):
+    await ctx.send('Report START')
+    await ctx.send('Status: Online')
+    await ctx.send(f'{ctx.author.nick} is still poopy')
+    await ctx.send('Will update when status changes')
+    await ctx.send('Report END')
 
        
 #sends the help EMbed
