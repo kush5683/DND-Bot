@@ -188,6 +188,11 @@ async def zoom(ctx):
     link = 'https://wpi.zoom.us/j/2284559997'
     await ctx.send(link)
     
+@client.command()
+async def spinoff(ctx):
+    link ='https://docs.google.com/presentation/d/1ZvTRApUw94-6vz_rGEGaiGZmZ5sTVwvJYFVmup5Hyq4/edit?usp=sharing'
+    await ctx.send(link)
+    
 #calls the author a poopy head 
 @client.command()
 async def poop(ctx):
