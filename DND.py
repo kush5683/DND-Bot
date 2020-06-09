@@ -219,11 +219,15 @@ async def kill(ctx):
         
 @client.command()
 async def statusreport(ctx):
-    await ctx.send('Report START')
-    await ctx.send('Status: Online')
-    await ctx.send(f'{ctx.author.nick} is still poopy')
-    await ctx.send('Will update when status changes')
-    await ctx.send('Report END')
+    report = discord.Embed(
+        color = discord.Colour.dark_red(),
+        title='STATUS REPORT'
+    )
+    
+    report.add_field(name='Status:', value='Online',inline=False)
+    report.add_field(name=f'{ctx.author.nick}:', value='Still poopy',inline=False)
+    report.add_field(name='Next: ',value='Will update when status changes',inline=False)
+    await ctx.send(embed=report)
 
        
 #sends the help EMbed
