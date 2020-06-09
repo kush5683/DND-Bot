@@ -200,7 +200,7 @@ async def poop(ctx):
 #returns image
 @client.command()
 async def unshitmypants(ctx):
-    await ctx.send(file=discord.File('assets\poopPants.jpg'))
+    await ctx.send(file=discord.File('assets/poopPants.jpg'))
        
 #kills the bot
 @client.command()
