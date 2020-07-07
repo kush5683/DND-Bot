@@ -121,6 +121,17 @@ async def on_member_removes(member):
 async def up(ctx):
     global up
     await ctx.send(f'Up since {up}')
+    
+@client.command()
+async def mr(ctx):
+    wet = ['dank','moist','sopping','slimy','slippery','soggy','soaking','drenched','aqueous','dripping','dewy','watery','doused','fluidy','sodden','soggy','water-logged','watered-down','damp','juicy','viscous','sappy','fluidic','molten','sloppy','oily','liquidy','oozy','sappy','syrupy','lubricated','un-dry','oceanic','un-dammed','flowing','mucousy','humid','clamy','misty','washed out']
+    wet.sort()
+
+    mouth = ['lips','tongue','face','throat','teeth','gums','uvula','gullet','wind pipe','hole','orifice','crevice','cavity','kisser','yap','gob','opening','rim','chops','cheeks','mug','crack','gap','pit','tunnel','chasm','skin','passage','slit','vent','split','jowl','gill','mandible','palate','tonsil','jaws','muzzle','maw','esophagus']
+    mouth.sort()
+
+    string = "Mr." + random.choice(wet).capitalize() + '-' + random.choice(mouth).capitalize()
+    await ctx.send(string)
 
 #repeats the given message {amount} times
 @client.command()
