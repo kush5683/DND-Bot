@@ -9,6 +9,7 @@ import string
 
 version = "Build 3.9"
 
+
 TOKEN = open('token.txt').readline()
 
 #builds the embed to be sent for the !help command
@@ -25,6 +26,7 @@ def helpEmbed():
     embed.add_field(name='!unshitmypants', value='Does the thing', inline=False)
     embed.add_field(name='!flip', value='Flips a coin (Heads or Tails)', inline=False)
     embed.add_field(name='!statusreport', value='reports status', inline=False)
+
     return embed
 
 def checkRole(ctx,desiredRole):
@@ -81,18 +83,18 @@ def getBotStat():
 #logs all messages on server 
 @client.event
 async def on_message(message):
-    
+
     print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
     text = []
     for str in message.content.upper().split():
         text.append(str.translate(str.maketrans('', '', string.punctuation)))
     for x in text:
+
         if (x == 'BOT' or x==message.guild.me.display_name.upper()) and (message.author.display_name != message.guild.me.display_name):
             await message.channel.send(f'I am the {message.guild.me.display_name}!')
     await client.process_commands(message)
     
 
-    
 #sets up bot and notifies server
 @client.event
 async def on_ready():
@@ -107,6 +109,7 @@ async def on_ready():
     await channel.send(embed=helpEmbed())
     await channel.send(f'Boot time:{up}')
 
+
 #sends help on incorrect command/syntax
 @client.event 
 async def on_command_error(ctx, error):
@@ -120,7 +123,6 @@ async def on_member_join(member):
 @client.event
 async def on_member_removes(member):
     print(f'{member} is no longer here')
-    
 
 #returns uptime to server
 @client.command()
@@ -162,7 +164,9 @@ async def ping(ctx):
 @client.command()
 async def roll(ctx,die, numDie=1):
     tup = localRoll(ctx, int(numDie),die)
+
     if ctx.channel.topic == 'general chat':
+
          await ctx.send(f'This action is not allowed in {ctx.channel}')
     elif tup == "too many dice" or tup =="Something went wrong":
         await ctx.send(tup)
@@ -175,6 +179,7 @@ async def flip(ctx):
     coin = ['Heads','Tails']
     result = random.choice(coin)
     await ctx.send(result)
+
     
     
 #clears message history from channel
@@ -201,6 +206,7 @@ async def zoom(ctx):
     link = 'https://wpi.zoom.us/j/2284559997'
     await ctx.send(link)
     
+
     
 #calls the author a poopy head 
 @client.command()
@@ -239,8 +245,10 @@ async def statusreport(ctx):
         title='STATUS REPORT'
     )
     
+
     report.add_field(name='Status:', value=f'{subject.status}',inline=False)
     report.add_field(name=f'{subject.nick}:', value='Still poopy',inline=False)
+
     report.add_field(name='Next: ',value='Will update when status changes',inline=False)
     await ctx.send(embed=report)
 
@@ -257,6 +265,7 @@ async def start(ctx):
     global inProgress
     admin = checkRole(ctx, 'Admin')
     channel = ctx.channel.topic == 'campaign'
+
     if admin:
         if channel:
             await ctx.send('Session Started')
@@ -273,6 +282,7 @@ async def end(ctx):
     global inProgress
     admin = checkRole(ctx, 'Admin')
     channel = ctx.channel.topic == 'campaign'
+
     if admin:
         if channel:
             await ctx.send('Session Ended')
