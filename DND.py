@@ -7,7 +7,8 @@ import psutil
 import datetime
 import string
 
-version = "Build 3.7"
+version = "Build 3.9"
+
 
 TOKEN = open('token.txt').readline()
 
@@ -24,6 +25,8 @@ def helpEmbed():
     embed.add_field(name='!poop', value='Returns poopy',inline=False)
     embed.add_field(name='!unshitmypants', value='Does the thing', inline=False)
     embed.add_field(name='!flip', value='Flips a coin (Heads or Tails)', inline=False)
+    embed.add_field(name='!statusreport', value='reports status', inline=False)
+
     return embed
 
 def checkRole(ctx,desiredRole):
@@ -80,14 +83,17 @@ def getBotStat():
 #logs all messages on server 
 @client.event
 async def on_message(message):
+
     print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
     text = []
     for str in message.content.upper().split():
         text.append(str.translate(str.maketrans('', '', string.punctuation)))
     for x in text:
-        if x == 'BOT' and (message.author.name != 'DND OVERLORD'):
-            await message.channel.send('I am the DND Overlord!')
+
+        if (x == 'BOT' or x==message.guild.me.display_name.upper()) and (message.author.display_name != message.guild.me.display_name):
+            await message.channel.send(f'I am the {message.guild.me.display_name}!')
     await client.process_commands(message)
+    
 
 #sets up bot and notifies server
 @client.event
@@ -97,10 +103,12 @@ async def on_ready():
     os.system('clear')
     print(version)
     print('Bot is ready')
-    await getBotStat().purge(limit=1000)
-    await getBotStat().send(f'I have arrived with {version} loaded')
-    await getBotStat().send(embed=helpEmbed())
-    await getBotStat().send(f'Boot time:{up}')
+    channel = getBotStat()
+    await channel.purge(limit=1000)
+    await channel.send(f'I have arrived with {version} loaded')
+    await channel.send(embed=helpEmbed())
+    await channel.send(f'Boot time:{up}')
+
 
 #sends help on incorrect command/syntax
 @client.event 
@@ -156,7 +164,9 @@ async def ping(ctx):
 @client.command()
 async def roll(ctx,die, numDie=1):
     tup = localRoll(ctx, int(numDie),die)
-    if ctx.channel.name == 'general':
+
+    if ctx.channel.topic == 'general chat':
+
          await ctx.send(f'This action is not allowed in {ctx.channel}')
     elif tup == "too many dice" or tup =="Something went wrong":
         await ctx.send(tup)
@@ -168,10 +178,8 @@ async def roll(ctx,die, numDie=1):
 async def flip(ctx):
     coin = ['Heads','Tails']
     result = random.choice(coin)
-    if ctx.channel.name == 'general':
-         await ctx.send(f'This action is not allowed in {ctx.channel}')
-    else:
-        await ctx.send(result)
+    await ctx.send(result)
+
     
     
 #clears message history from channel
@@ -193,16 +201,12 @@ async def roles(ctx):
 
 
 #returns the zoom link for the sessions
-
 @client.command()
 async def zoom(ctx):
     link = 'https://wpi.zoom.us/j/2284559997'
     await ctx.send(link)
     
-@client.command()
-async def spinoff(ctx):
-    link ='https://docs.google.com/presentation/d/1ZvTRApUw94-6vz_rGEGaiGZmZ5sTVwvJYFVmup5Hyq4/edit?usp=sharing'
-    await ctx.send(link)
+
     
 #calls the author a poopy head 
 @client.command()
@@ -235,13 +239,16 @@ async def kill(ctx):
         
 @client.command()
 async def statusreport(ctx):
+    subject = random.choice(ctx.guild.members)
     report = discord.Embed(
         color = discord.Colour.dark_red(),
         title='STATUS REPORT'
     )
     
-    report.add_field(name='Status:', value='Online',inline=False)
-    report.add_field(name=f'{ctx.author.nick}:', value='Still poopy',inline=False)
+
+    report.add_field(name='Status:', value=f'{subject.status}',inline=False)
+    report.add_field(name=f'{subject.nick}:', value='Still poopy',inline=False)
+
     report.add_field(name='Next: ',value='Will update when status changes',inline=False)
     await ctx.send(embed=report)
 
@@ -257,7 +264,8 @@ async def help(ctx):
 async def start(ctx):
     global inProgress
     admin = checkRole(ctx, 'Admin')
-    channel = ctx.channel.name == 'wpi-campaign'or ctx.channel.name == 'nmh-campaign'
+    channel = ctx.channel.topic == 'campaign'
+
     if admin:
         if channel:
             await ctx.send('Session Started')
@@ -273,7 +281,8 @@ async def start(ctx):
 async def end(ctx):
     global inProgress
     admin = checkRole(ctx, 'Admin')
-    channel = ctx.channel.name == 'wpi-campaign'or ctx.channel.name == 'nmh-campaign'
+    channel = ctx.channel.topic == 'campaign'
+
     if admin:
         if channel:
             await ctx.send('Session Ended')
