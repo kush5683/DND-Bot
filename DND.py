@@ -247,7 +247,7 @@ async def statusreport(ctx):
     
 
     report.add_field(name='Status:', value=f'{subject.status}',inline=False)
-    report.add_field(name=f'{subject.nick}:', value='Still poopy',inline=False)
+    report.add_field(name=f'{subject.display_name}:', value='Still poopy',inline=False)
 
     report.add_field(name='Next: ',value='Will update when status changes',inline=False)
     await ctx.send(embed=report)
