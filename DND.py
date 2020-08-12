@@ -197,7 +197,7 @@ async def brew(ctx, numToBrew = 1):
         roll = localRoll(ctx,1,'d20')[0]
         if (roll + 4) > DC:
             await ctx.send(f'You rolled a {roll+4}!')
-            await ctx.send(f'You have made a {random.choice(effects)} potion')
+            await ctx.send(f'You have made a {random.choice(effects)} potion\n')
         else:
             await ctx.send(f'You did not roll higher than DC:{DC} ({roll+4})')  
     
