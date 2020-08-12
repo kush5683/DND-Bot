@@ -185,6 +185,22 @@ async def blast(ctx):
        
 
 
+    @client.command()
+async def brew(ctx, numToBrew = 1):
+    lvl = 11
+    DC = 12
+    effects = ['Healing','Swiftness','Resilience','Boldness','Flight','Transformation']
+    if(numToBrew> lvl):
+        numToBrew = lvl
+    int_mod = 4
+    for _ in range(numToBrew):
+        roll = localRoll(ctx,1,'d20')[0]
+        if (roll + 4) > DC:
+            await ctx.send(f'You rolled a {roll+4}!')
+            await ctx.send(f'You have made a {random.choice(effects)} potion')
+        else:
+            await ctx.send(f'You did not roll higher than DC:{DC} ({roll+4})')  
+    
 #flips a coin
 @client.command()
 async def flip(ctx):
