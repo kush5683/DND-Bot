@@ -196,11 +196,16 @@ async def brew(ctx, numToBrew = 1):
     for i in range(numToBrew):
         await ctx.send(f'Potion #{i+1}')
         roll = localRoll(ctx,1,'d20')[0]
+        if roll == 'Nat 20':
+            roll =20
+        elif roll == 'Crit Fail':
+            roll = 1
         if (roll + 4) > DC:
             await ctx.send(f'You rolled a {roll+4}!')
-            await ctx.send(f'You have made a {random.choice(effects)} potion\n')
+            await ctx.send(f'You have made a {random.choice(effects)} potion')
         else:
             await ctx.send(f'You did not roll higher than DC:{DC} ({roll+4})')  
+     
     
 #flips a coin
 @client.command()
