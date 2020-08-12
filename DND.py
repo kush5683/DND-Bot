@@ -174,7 +174,7 @@ async def roll(ctx,die, numDie=1):
         await ctx.send(f' {ctx.author.nick} rolled {tup[0]} from {numDie} {die} \n{tup[1]}')
 
 @client.command()
-async def eb(ctx):
+async def blast(ctx):
     first = localRoll(ctx, 3, d20) + 13
     second = localRoll(ctx, 3, d10) + 12
     await ctx.send(f'Eldritch blast with Trof\'s stats is {first} + {second} = {first + second}')
