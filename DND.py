@@ -180,7 +180,7 @@ async def blast(ctx):
     
     dieNum = 0
     for _ in hit_rolls:
-        await ctx.send(f' Blast #{dieNum+1}: {hit_rolls[dieNum] + 13 }({hit_rolls[dieNum]} + 13) to hit \nwith {dmg_rolls[dieNum] + 12} ({dmg_rolls[dieNum]} +12) damage')
+        await ctx.send(f' Blast #{dieNum+1}: {hit_rolls[dieNum] + 13} ({hit_rolls[dieNum]} + 13) to hit \nwith {dmg_rolls[dieNum] + 12} ({dmg_rolls[dieNum]} +12) damage')
         dieNum +=1
        
 
