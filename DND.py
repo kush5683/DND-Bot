@@ -176,10 +176,10 @@ async def roll(ctx,die, numDie=1):
 @client.command()
 async def blast(ctx):
     first = localRoll(ctx, 3, 'd20')
-    second = localRoll(ctx, 3, 'd10')
+    second = localRoll(ctx, 1, 'd10')
     await ctx.send(f' {ctx.author.display_name} rolled {first[0]} + 13 from 3 d20 \n{first[1]}')
-    await ctx.send(f' {ctx.author.display_name} rolled {second[0]} + 12 from 3 d10 \n{second[1]}')
-    await ctx.send(f'Eldritch blast with Trofs stats is {first[0] + 13} + {second[0] + 12} = {first[0] + second[0]+25}')
+    await ctx.send(f' {ctx.author.display_name} rolled {second[0]} + 12 from 1 d10 \n{second[1]}')
+    await ctx.send(f'Eldritch blast with Trofs stats is {first[0] + 13} to hit and  {second[0] + 12} damage')
 
 
 #flips a coin
