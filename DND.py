@@ -171,15 +171,15 @@ async def roll(ctx,die, numDie=1):
     elif tup == "too many dice" or tup =="Something went wrong":
         await ctx.send(tup)
     else:
-        await ctx.send(f' {ctx.author.nick} rolled {tup[0]} from {numDie} {die} \n{tup[1]}')
+        await ctx.send(f' {ctx.author.display_name} rolled {tup[0]} from {numDie} {die} \n{tup[1]}')
 
 @client.command()
 async def blast(ctx):
-    first = localRoll(ctx, 3, d20)
-    second = localRoll(ctx, 3, d10)
-    await ctx.send(f' {ctx.author.nick} rolled {first[0]} from 3 d20 \n{first[1]}')
-    await ctx.send(f' {ctx.author.nick} rolled {second[0]} from 3 d20 \n{second[1]}')
-    await ctx.send(f'Eldritch blast with Trofs stats is {first[0] + 13} + {second[0] + 12} = {first + second}')
+    first = localRoll(ctx, 3, 'd20')
+    second = localRoll(ctx, 3, 'd10')
+    await ctx.send(f' {ctx.author.display_name} rolled {first[0]} from 3 d20 \n{first[1]}')
+    await ctx.send(f' {ctx.author.display_name} rolled {second[0]} from 3 d10 \n{second[1]}')
+    await ctx.send(f'Eldritch blast with Trofs stats is {first[0] + 13} + {second[0] + 12} = {first[0] + second[0]+25}')
 
 
 #flips a coin
@@ -197,7 +197,7 @@ async def clear(ctx, amount=100):
     admin = checkRole(ctx, 'Admin')
     if admin:
         await ctx.channel.purge(limit=amount)
-        await ctx.send(f'Cleared by {ctx.author.nick}')
+        await ctx.send(f'Cleared by {ctx.author.display_name}')
     else:
         await ctx.send(f'Only Admin can perform this task')
         
@@ -206,7 +206,7 @@ async def clear(ctx, amount=100):
 async def roles(ctx):
     for role in ctx.author.roles:
         if str(role) != '@everyone':
-            await ctx.send(f'{ctx.author.nick} has role {role}')
+            await ctx.send(f'{ctx.author.display_name} has role {role}')
 
 
 #returns the zoom link for the sessions
@@ -222,7 +222,7 @@ async def zoom(ctx):
 async def poop(ctx):
    # print(f'{ctx.author.name.upper()}')
     if('KUSH' not in ctx.author.name.upper()):
-       await ctx.send(f'{ctx.author.nick} is poopy')
+       await ctx.send(f'{ctx.author.display_name} is poopy')
     else:
        await ctx.send('Keith is a poopy head')
 
