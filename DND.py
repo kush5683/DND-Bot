@@ -7,7 +7,7 @@ import psutil
 import datetime
 import string
 
-version = "Build 3.9"
+version = "Build 3.10"
 
 
 TOKEN = open('token.txt').readline()
