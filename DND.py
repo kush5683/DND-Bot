@@ -194,7 +194,7 @@ async def brew(ctx, numToBrew = 1):
         numToBrew = lvl
     int_mod = 4
     for i in range(numToBrew):
-        await ctx.send(f'Potion #{i}')
+        await ctx.send(f'Potion #{i+1}')
         roll = localRoll(ctx,1,'d20')[0]
         if (roll + 4) > DC:
             await ctx.send(f'You rolled a {roll+4}!')
