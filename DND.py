@@ -185,7 +185,7 @@ async def blast(ctx):
        
 
 
-    @client.command()
+@client.command()
 async def brew(ctx, numToBrew = 1):
     lvl = 11
     DC = 12
