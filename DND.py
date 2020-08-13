@@ -84,7 +84,7 @@ def getBotStat():
 @client.event
 async def on_message(message):
 
-    print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
+    #print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
     text = []
     for str in message.content.upper().split():
         text.append(str.translate(str.maketrans('', '', string.punctuation)))
