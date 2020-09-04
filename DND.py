@@ -181,7 +181,7 @@ async def blast(ctx):
     dieNum = 0
     for _ in hit_rolls:
         if hit_rolls[dieNum] == 20:
-            dmg_rolls[dieNum] += localRoll(ctx,1,'d10')[1]
+            dmg_rolls[dieNum] += localRoll(ctx,1,'d10')[0]
         await ctx.send(f' Blast #{dieNum+1}: {hit_rolls[dieNum] + 13} ({hit_rolls[dieNum]} + 13) to hit \nwith {dmg_rolls[dieNum] + 14} ({dmg_rolls[dieNum]} +14) damage')
         dieNum +=1
        
