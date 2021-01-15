@@ -228,9 +228,7 @@ async def clear(ctx, amount=100):
     else:
         await ctx.send(f'Only Admin can perform this task')
         
-#returns authors roles on the server
-@client.command()
-async def roles(ctx):
+#returns authors roles on the server for Siege
 @client.command()
 async def roles(ctx, team=' '):
     order = []
