@@ -231,9 +231,20 @@ async def clear(ctx, amount=100):
 #returns authors roles on the server
 @client.command()
 async def roles(ctx):
-    for role in ctx.author.roles:
-        if str(role) != '@everyone':
-            await ctx.send(f'{ctx.author.display_name} has role {role}')
+@client.command()
+async def roles(ctx, team=' '):
+    order = []
+    if(team[0]=='a'):
+        roles = ['entry','drone','medic','planter','tail']   
+    elif(team[0]=='d'):
+        roles = ['roamer','cam','medic','defuser','anchor']   
+    else:
+        roles = ['1','2','3','4','5']  
+    while(roles):
+            pick = random.choice(roles)
+            order.append(pick)
+            roles.remove(pick)
+    await ctx.send(order)
 
 
 #returns the zoom link for the sessions
